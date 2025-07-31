@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Aya Bay Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .form-group,
+    .item-row {
+      margin-bottom: 20px;
+    }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+    }
+
+    label {
+      font-weight: bold;
+      width: 250px;
+    }
+
+    input {
+      flex: 1;
+      padding: 8px;
+      font-size: 1em;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      margin-top: 10px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      background-color: #f7f7f7;
+    }
+
+    table {
+      width: 100% !important;
+      border-collapse: collapse;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid #ccc;
+    }
+
+    th,
+    td {
+      padding: 8px;
+    }
+
+    @media print {
+      body {
+        font-size: 12pt;
+        color: #000;
+      }
+
+      input,
+      button {
+        display: none !important;
+      }
+
+      .result {
+        border: none;
+        background: white;
+        padding: 0;
+      }
+
+      table {
+        border: 1px solid #000;
+      }
+
+      th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+      }
+
+      .result p {
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 0;
+      }
+
+      .page-break {
+        page-break-before: always !important;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Roofing Item Calculator</h2>
+
+  <!-- Inputs -->
+  <div class="form-group">
+    <label for="projectTitle">Project Title: <span class="print-value" id="projectTitle_print"></span></label>
+    <input type="text" id="projectTitle" placeholder="e.g. Roger Johnson" />
+  </div>
+
+  <hr>
+
+  <!-- New Inputs -->
+  <div class="item-row">
+    <label for="removedShingle">Removed Shingle:<span class="print-value" id="removedShingle_print"></span></label>
+    <input type="number" id="removedShingle" placeholder="Enter measured area value" />
+  </div>
+  <div class="item-row">
+    <label for="addedShingle">Added Shingle: <span class="print-value" id="addedShingle_print"></span></label>
+    <input type="number" id="addedShingle" placeholder="Enter Suggested area value" />
+  </div>
+  <div class="item-row">
+    <label for="starterEavesRakes">Starter: <span class="print-value" id="starterEavesRakes_print"></span></label>
+    <input type="number" id="starterEaves" placeholder="Enter Eaves value" />
+    <input type="number" id="starterRakes" placeholder="Enter Rakes value" />
+  </div>
+
+  <div class="item-row">
+    <label for="roofingFeltArea">Roofing Felt: <span class="print-value" id="roofingFeltArea_print"></span></label>
+    <input type="number" id="roofingFeltArea" placeholder="Enter Total Roofing Area" />
+  </div>
+  <div class="item-row">
+    <label for="dripEdgeInput">Drip Edge:<span class="print-value" id="dripEdgeInput_print"></span></label>
+    <input type="number" id="dripEdgeInput" placeholder="Enter Rakes plus Eaves value" />
+  </div>
+  <div class="item-row">
+    <label for="hipsRidge">Hips Ridge Cap:<span class="print-value" id="hipsRidge_print"></span></label>
+    <input type="number" id="hips" placeholder="Enter Hips value" />
+    <input type="number" id="ridge" placeholder="Enter Ridge value" />
+  </div>
+  <div class="item-row">
+    <label for="vents">Vents:<span class="print-value" id="vents_print"></span></label>
+    <input type="number" id="vents" placeholder="Enter CC Vents value" />
+  </div>
+  <div class="item-row">
+    <label for="digitalSatellite">Digital Satellite:<span class="print-value" id="digitalSatellite_print"></span></label>
+    <input type="number" id="digitalSatellite" placeholder="Enter CC Digital Satellite" />
+  </div>
+  <div class="item-row">
+    <label for="pipeJack">Pipe Jack:<span class="print-value" id="pipeJack_print"></span></label>
+    <input type="number" id="pipeJack" placeholder="Enter CC Pipe Jack" />
+  </div>
+  <div class="item-row">
+    <label for="addditionalCharge">Additional Charge for high roof:<span class="print-value" id="addditionalCharge_print"></span></label>
+    <input type="number" id="addditionalCharge" placeholder="Enter Additional Charge for high roof (2 stories or greater)" />
+  </div>
+  <div class="item-row">
+    <label for="removeAddditionalCharge">Remove Additional Charge for high roof:<span class="print-value" id="removeAddditionalCharge_print"></span></label>
+    <input type="number" id="removeAddditionalCharge" placeholder="Enter Additional Charge for high roof (2 stories or greater)" />
+  </div>
+  <div class="item-row">
+    <label for="addditionalChargeStep">Additional Charge for step roof:<span class="print-value" id="addditionalChargeStep_print"></span></label>
+    <input type="number" id="addditionalChargeStep" placeholder="Enter Additional Charge for step roof - 7/12 9/12 slope" />
+  </div>  
+  <div class="item-row">
+    <label for="removeAddditionalChargeStep">Remove Additional Charge for step roof:<span class="print-value" id="removeAddditionalChargeStep_print"></span></label>
+    <input type="number" id="removeAddditionalChargeStep" placeholder="Enter Additional Charge for step roof - 7/12 9/12 slope" />
+  </div>
+  <div class="item-row">
+    <label for="gutterFirstFloor">Gutter First Floor:<span class="print-value" id="gutterFirstFloor_print"></span></label>
+    <input type="number" id="gutterFirstFloor" placeholder="Enter total number of Eaves" />
+  </div>
+  <div class="item-row">
+    <label for="gutterSecondFloor">Gutter Second Floor:<span class="print-value" id="gutterSecondFloor_print"></span></label>
+    <input type="number" id="gutterSecondFloor" placeholder="Enter total number of Eaves" />
+  </div>
+
+
+
+  <hr>
+
+  <div class="item-row"><label for="totalArea">Area Suggested: <span class="print-value"
+        id="totalArea_print"></span></label><input type="number" id="totalArea" /></div>
+  <div class="item-row"><label for="ridgeLength">Ridge Cap Length (LF): <span class="print-value"
+        id="ridgeLength_print"></span></label><input type="number" id="ridgeLength" /></div>
+  <div class="item-row"><label for="starterArea">Starter Shingle: <span class="print-value"
+        id="starterArea_print"></span></label><input type="number" id="starterArea" /></div>
+  <div class="item-row"><label for="dripedge">Drip Edge: <span class="print-value"
+        id="dripedge_print"></span></label><input type="number" id="dripedge" /></div>
+  <div class="item-row"><label for="icewaterUnder">Ice & Water Underlayment: <span class="print-value"
+        id="icewaterUnder_print"></span></label><input type="number" id="icewaterUnder" /></div>
+  <div class="item-row"><label for="synthicUnder">Synthic Underlayment: <span class="print-value"
+        id="synthicUnder_print"></span></label><input type="number" id="synthicUnder" /></div>
+  <div class="item-row"><label for="stepflashing">Step Flashing: <span class="print-value"
+        id="stepflashing_print"></span></label><input type="number" id="stepflashing" /></div>
+  <div class="item-row"><label for="counterflashing">Counter Flashing: <span class="print-value"
+        id="counterflashing_print"></span></label><input type="number" id="counterflashing" /></div>
+  <div class="item-row"><label for="nailsbox">Box of Nails: <span class="print-value"
+        id="nailsbox_print"></span></label><input type="number" id="nailsbox" /></div>
+  <div class="item-row"><label for="nailsCapbox">Box of Nails Cap: <span class="print-value"
+        id="nailsCapbox_print"></span></label><input type="number" id="nailsCapbox" /></div>
+
+  <button onclick="calculateAll()">Calculate</button>
+  <button onclick="window.print()">Print</button>
+  <button onclick="exportToPDF()">Download as PDF</button>
+
+  <!-- Results Table -->
+  <div class="result page-break" id="outputSection" style="display:none;">
+    <p><strong>Project:</strong> <span id="outputTitle"></span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Quantity (Order Material)</th>
+          <th>Extra</th>
+          <th>Quantity (Xactimate)</th>
+        </tr>
+      </thead>
+      <tbody id="resultsTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Script -->
+  <script>
+    function updatePrintValue(id) {
+      const value = document.getElementById(id).value;
+      const span = document.getElementById(id + '_print');
+      if (span) span.textContent = value;
+    }
+
+    function calculateAll() {
+      const title = document.getElementById('projectTitle').value.trim();
+      const area = parseFloat(document.getElementById('totalArea').value);
+      const ridgeLength = parseFloat(document.getElementById('ridgeLength').value);
+      const starterArea = parseFloat(document.getElementById('starterArea').value);
+      const dripedge = parseFloat(document.getElementById('dripedge').value);
+      const icewaterUnder = parseFloat(document.getElementById('icewaterUnder').value);
+      const synthicUnder = parseFloat(document.getElementById('synthicUnder').value);
+      const stepflashing = parseFloat(document.getElementById('stepflashing').value);
+      const counterflashing = parseFloat(document.getElementById('counterflashing').value);
+      const nailsbox = parseFloat(document.getElementById('nailsbox').value);
+      const nailsCapbox = parseFloat(document.getElementById('nailsCapbox').value);
+
+      // New custom values
+      const removedShingle = parseFloat(document.getElementById('removedShingle').value);
+      const addedShingle = parseFloat(document.getElementById('addedShingle').value);
+      const starterEaves = parseFloat(document.getElementById('starterEaves').value);
+      const starterRakes = parseFloat(document.getElementById('starterRakes').value);
+      const roofingFeltArea = parseFloat(document.getElementById('roofingFeltArea').value);
+      const dripEdgeInput = parseFloat(document.getElementById('dripEdgeInput').value);
+      const hips = parseFloat(document.getElementById('hips').value);
+      const ridge = parseFloat(document.getElementById('ridge').value);
+      const vents = parseFloat(document.getElementById('vents').value);
+      const digitalSatellite = parseFloat(document.getElementById('digitalSatellite').value);
+      const pipeJack = parseFloat(document.getElementById('pipeJack').value);
+      const addditionalCharge = parseFloat(document.getElementById('addditionalCharge').value);
+      const removeAddditionalCharge = parseFloat(document.getElementById('removeAddditionalCharge').value);
+      const addditionalChargeStep = parseFloat(document.getElementById('addditionalChargeStep').value);
+      const removeAddditionalChargeStep = parseFloat(document.getElementById('removeAddditionalChargeStep').value);
+      const gutterFirstFloor = parseFloat(document.getElementById('gutterFirstFloor').value);
+      const gutterSecondFloor = parseFloat(document.getElementById('gutterSecondFloor').value);
+
+      const starterTotal = (starterEaves || 0) + (starterRakes || 0);
+      const roofingFeltResult = roofingFeltArea ? (roofingFeltArea / 100).toFixed(2) : 0;
+      const hipsRidgeTotal = (hips || 0) + (ridge || 0);
+      const addditionalChargeValue = addditionalCharge ? ((addditionalCharge * 1.16) / 100 ).toFixed(2) : 0;
+      const removeAddditionalChargeValue = removeAddditionalCharge ? (removeAddditionalCharge / 100).toFixed(2) : 0;
+      const addditionalChargeStepValue = addditionalChargeStep ? ((addditionalChargeStep * 1.16) / 100).toFixed(2) : 0;
+      const removeAddditionalChargeStepValue = removeAddditionalChargeStep ? (removeAddditionalChargeStep / 100).toFixed(2) : 0;
+      const dawnspoutValue = (Math.ceil(gutterFirstFloor / 20) * 12 );
+      const dawnspoutTotalValue = dawnspoutValue + gutterFirstFloor;
+      const dawnspoutValueSec = (Math.ceil(gutterSecondFloor / 20) * 20 );
+      const dawnspoutTotalValueSec = dawnspoutValueSec + gutterSecondFloor;
+      const gutterTotal = dawnspoutTotalValue + dawnspoutTotalValueSec;
+
+      if (!title) {
+        alert("Please enter a project title.");
+        return;
+      }
+
+      ['projectTitle', 'totalArea', 'ridgeLength', 'starterArea', 'dripedge', 'icewaterUnder', 'synthicUnder', 'stepflashing', 'counterflashing', 'nailsbox', 'nailsCapbox', 'removedShingle', 'addedShingle', 'roofingFeltArea', 'dripEdgeInput', 'vents', 'digitalSatellite', 'pipeJack', 'addditionalCharge', 'removeAddditionalCharge', 'addditionalChargeStep', 'removeAddditionalChargeStep', 'gutterFirstFloor', 'gutterSecondFloor'].forEach(updatePrintValue);
+
+      document.getElementById('starterEavesRakes_print').textContent = starterTotal;
+      document.getElementById('hipsRidge_print').textContent = hipsRidgeTotal;
+
+
+      document.getElementById('outputTitle').innerHTML = `
+        ${title}<br><br>
+        Removed Shingle: ${isNaN(removedShingle) ? '-' : removedShingle}<br>
+        Added Shingle: ${isNaN(addedShingle) ? '-' : addedShingle}<br>
+        Starter (Eaves + Rakes): ${starterTotal}<br>
+        Roofing Felt (Total Area ÷ 100): ${roofingFeltResult}<br>
+        Drip Edge (Rakes + Eaves): ${isNaN(dripEdgeInput) ? '-' : dripEdgeInput}<br>
+        Hips + Ridge Cap: ${hipsRidgeTotal}<br>
+        CC Vents: ${vents}<br>
+        CC Digital Satellite: ${digitalSatellite}<br>
+        CC pipe Jack: ${pipeJack}<br>
+        Additional Charge for high roof (2 stories or greater): ${addditionalChargeValue}<br>
+        Remove Additional Charge for high roof (2 stories or greater): ${removeAddditionalChargeValue}<br>
+        Additional Charge for step roof: ${addditionalChargeStepValue}<br>
+        Remove Additional Charge for step roof: ${removeAddditionalChargeStepValue}<br>  
+        Gutter Down Spout for First Floor: ${Math.floor(dawnspoutValue)}<br> 
+        Gutter for First Floor: ${Math.floor(dawnspoutTotalValue)}<br> 
+        Gutter Down Spout for Second Floor: ${Math.floor(dawnspoutValueSec)}<br>  
+        Gutter for Second Floor: ${Math.floor(dawnspoutTotalValueSec)}<br>                   
+        Total Gutter for 2 Floor: ${Math.floor(gutterTotal)}<br>                   
+
+      `;
+      document.getElementById('outputSection').style.display = "block";
+
+      const resultsTableBody = document.getElementById('resultsTableBody');
+      resultsTableBody.innerHTML = "";
+
+      let ridgeQty = 0, ridgeExtra = 0;
+      let starterQty = 0, starterExtra = 0;
+      let totalShingleN = 0;
+
+      if (!isNaN(area)) {
+        const totalShingle = area * 3;
+        totalShingleN = Math.ceil(totalShingle);
+        resultsTableBody.innerHTML += `<tr><td>Shingle Bundle</td><td>${totalShingleN} bundles</td><td>-</td><td>-</td></tr>`;
+      }
+
+      if (!isNaN(ridgeLength)) {
+        const raw = ridgeLength / 25;
+        ridgeQty = Math.ceil(raw);
+        ridgeExtra = +(ridgeQty - raw).toFixed(5);
+        const xact = ridgeQty * 25;
+        resultsTableBody.innerHTML += `<tr><td>Ridge Cap</td><td>${ridgeQty} bundles</td><td>${ridgeExtra}</td><td>${xact} LF</td></tr>`;
+      }
+
+      if (!isNaN(starterArea)) {
+        const raw = starterArea / 115;
+        starterQty = Math.ceil(raw);
+        starterExtra = +(starterQty - raw).toFixed(5);
+        const xact = starterQty * 120;
+        resultsTableBody.innerHTML += `<tr><td>Starter Shingle</td><td>${starterQty} bundles</td><td>${starterExtra}</td><td>${xact} LF</td></tr>`;
+      }
+
+      if (!isNaN(totalShingleN)) {
+        const raw = (totalShingleN - (ridgeQty + starterQty)) + (ridgeExtra + starterExtra);
+        const qty = Math.ceil(raw);
+        const extra = +(qty - raw).toFixed(5);
+        const xact = +(qty * 0.33).toFixed(5);
+        resultsTableBody.innerHTML += `<tr><td>Field Shingle</td><td>${qty} bundles</td><td>${extra}</td><td>${xact} SQ</td></tr>`;
+      }
+
+      if (!isNaN(dripedge)) {
+        const raw = dripedge * 0.115;
+        const qty = Math.ceil(raw);
+        const extra = +(qty - raw).toFixed(5);
+        const xact = qty * 10;
+        resultsTableBody.innerHTML += `<tr><td>Drip Edge</td><td>${qty} drip edge</td><td>${extra}</td><td>${xact} LF</td></tr>`;
+      }
+
+      if (!isNaN(icewaterUnder)) {
+        const raw = icewaterUnder / 50;
+        const qty = Math.ceil(raw);
+        const extra = +(qty - raw).toFixed(5);
+        const xact = qty * 50;
+        resultsTableBody.innerHTML += `<tr><td>Ice & Water Underlayment</td><td>${qty} Roll</td><td>${extra}</td><td>${xact} SQ</td></tr>`;
+      }
+
+      if (!isNaN(synthicUnder)) {
+        const raw = synthicUnder / 9;
+        const qty = Math.ceil(raw);
+        const extra = +(qty - raw).toFixed(5);
+        const xact = qty * 10;
+        resultsTableBody.innerHTML += `<tr><td>Synthic Underlayment</td><td>${qty} Roll</td><td>${extra}</td><td>${xact} SQ</td></tr>`;
+      }
+
+      if (!isNaN(stepflashing)) {
+        const raw = stepflashing * 2;
+        const qty = Math.ceil(raw);
+        const extra = +(qty - raw).toFixed(5);
+        const xact = stepflashing;
+        resultsTableBody.innerHTML += `<tr><td>Step Flashing</td><td>${qty} LF</td><td>${extra}</td><td>${xact} LF</td></tr>`;
+      }
+
+      if (!isNaN(counterflashing)) {
+        const qty = Math.ceil(counterflashing);
+        const extra = +(qty - counterflashing).toFixed(5);
+        resultsTableBody.innerHTML += `<tr><td>Counter Flashing</td><td>${qty} LF</td><td>${extra}</td><td>${qty} LF</td></tr>`;
+      }
+
+      if (!isNaN(nailsbox)) {
+        const raw = nailsbox / 15;
+        const qty = Math.ceil(raw);
+        const extra = +(qty - raw).toFixed(5);
+        const xact = qty * 15;
+        resultsTableBody.innerHTML += `<tr><td>Box of Nails</td><td>${qty} Box</td><td>${extra}</td><td>${xact} SQ</td></tr>`;
+      }
+
+      if (!isNaN(nailsCapbox)) {
+        const raw = nailsCapbox / 20;
+        const qty = Math.ceil(raw);
+        const extra = +(qty - raw).toFixed(5);
+        const xact = qty * 20;
+        resultsTableBody.innerHTML += `<tr><td>Box of Nails Cap</td><td>${qty} Box</td><td>${extra}</td><td>${xact} SQ</td></tr>`;
+      }
+    }
+
+    function exportToPDF() {
+      const element = document.body;
+
+      // Hide buttons temporarily
+      const buttons = document.querySelectorAll('button');
+      buttons.forEach(btn => btn.style.display = 'none');
+
+      const opt = {
+        margin: 0.5,
+        filename: 'Roofing Calculation.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 1.5, scrollY: 0 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+      html2pdf()
+        .set(opt)
+        .from(element)
+        .save()
+        .then(() => {
+          // Show buttons again after export
+          buttons.forEach(btn => btn.style.display = 'inline-block');
+        });
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</body>
+
+</html>
