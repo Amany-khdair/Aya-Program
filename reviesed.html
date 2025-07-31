@@ -209,25 +209,18 @@
 
 
   <!-- Interior Damage Section -->
-  <hr> 
-  <!-- Interior Damage Toggle -->
-<div class="form-group">
-  <label><input type="checkbox" id="toggleInterior" onchange="toggleInteriorSection()"> Has Interior Damage?</label>
-</div>
-
-<!-- Interior Damage Section -->
-<div id="interiorSection" style="display:none;">
+  <hr>
   <h3>Interior Damage</h3>
 
-  <!-- Unit Conversion Unified -->
   <div class="item-row">
-    <label for="convertToFeet">Convert to Feet:</label>
-    <input type="number" id="convertToFeet" style="width: 20px;" placeholder="Enter value">
-    <select id="unitSelect">
-      <option value="inch">Inch</option>
-      <option value="meter">Meter</option>
-    </select>
-    <span class="print-value" id="convertToFeet_print"></span>
+    <label for="inchesToFeet">Convert Inches to Feet:</label>
+    <input type="number" id="inchesToFeet" placeholder="Inches">
+    <span class="print-value" id="inchesToFeet_print"></span>
+  </div>
+  <div class="item-row">
+    <label for="metersToFeet">Convert Meters to Feet:</label>
+    <input type="number" id="metersToFeet" placeholder="Meters">
+    <span class="print-value" id="metersToFeet_print"></span>
   </div>
 
   <div class="item-row">
@@ -248,37 +241,6 @@
     <input type="number" id="maskWidth" placeholder="Width (ft)">
     <input type="number" id="maskHeight" placeholder="Height (ft)">
   </div>
-
-  <div class="item-row">
-    <label for="drywallPatch">Drywall patch / small repair, ready for paint:<span class="print-value" id="drywallPatch_print"></span></label>
-    <input type="number" id="drywallPatch" placeholder="Area (sq ft)">
-  </div>
-
-  <div class="item-row">
-    <label for="removePopcorn">Remove acoustic ceiling (popcorn) texture:<span class="print-value" id="removePopcorn_print"></span></label>
-    <input type="number" id="removePopcornLength" placeholder="Length (ft)">
-    <input type="number" id="removePopcornWidth" placeholder="Width (ft)">
-  </div>
-
-  <div class="item-row">
-    <label for="sealCeiling">Seal the ceiling w/PVA primer - one coat:<span class="print-value" id="sealCeiling_print"></span></label>
-    <input type="number" id="sealCeilingLength" placeholder="Length (ft)">
-    <input type="number" id="sealCeilingWidth" placeholder="Width (ft)">
-  </div>
-
-  <div class="item-row">
-    <label for="finalCleaning">Final cleaning - construction - residential:<span class="print-value" id="finalCleaning_print"></span></label>
-    <input type="number" id="finalCleaningLength" placeholder="Length (ft)">
-    <input type="number" id="finalCleaningWidth" placeholder="Width (ft)">
-  </div>
-
-  <div class="item-row">
-    <label for="acousticCeiling">Acoustic ceiling (popcorn) texture:<span class="print-value" id="acousticCeiling_print"></span></label>
-    <input type="number" id="acousticCeilingLength" placeholder="Length (ft)">
-    <input type="number" id="acousticCeilingWidth" placeholder="Width (ft)">
-  </div>
-
-</div>
 
 
   <button onclick="calculateAll()">Calculate</button>
@@ -318,31 +280,11 @@
 
   <!-- Script -->
   <script>
-    let hasCalculated = false;
     function updatePrintValue(id) {
       const value = document.getElementById(id).value;
       const span = document.getElementById(id + '_print');
       if (span) span.textContent = value;
     }
-
-    function toggleInteriorSection() {
-      const isChecked = document.getElementById('toggleInterior').checked;
-      document.getElementById('interiorSection').style.display = isChecked ? 'block' : 'none';
-    }
-
-    function convertToFeet(value, unit) {
-      if (unit === 'meter') {
-        return (value * 3.28084).toFixed(2);
-      } else if (unit === 'inch') {
-        const parts = value.toString().split('.');
-        const feetPart = parseInt(parts[0]) || 0;
-        const inchFraction = parseFloat("0" + (parts[1] || "0"));
-        const inchToFeet = (inchFraction / 12);
-        return (feetPart + inchToFeet).toFixed(4);
-      }
-      return '';
-    }
-
 
     function calculateAll() {
       const title = document.getElementById('projectTitle').value.trim();
@@ -390,7 +332,7 @@
       const gutterTotal = dawnspoutTotalValue + dawnspoutTotalValueSec;
 
       if (!title) {
-        alert("Please enter a project title.🤧​");
+        alert("Please enter a project title.");
         return;
       }
 
@@ -515,99 +457,62 @@
         resultsTableBody.innerHTML += `<tr><td>Box of Nails Cap</td><td>${qty} Box</td><td>${extra}</td><td>${xact} SQ</td></tr>`;
       }
 
-      const convertValue = parseFloat(document.getElementById('convertToFeet').value);
-      const convertUnit = document.getElementById('unitSelect').value;
-      const convertedFeet = !isNaN(convertValue) ? convertToFeet(convertValue, convertUnit) : '-';
-      document.getElementById('convertToFeet_print').textContent = convertedFeet + ' ft';
 
+      // Conversion Results
+      const inchesToFeet = parseFloat(document.getElementById('inchesToFeet').value);
+      const metersToFeet = parseFloat(document.getElementById('metersToFeet').value);
+      document.getElementById('inchesToFeet_print').textContent = inchesToFeet ? (inchesToFeet / 12).toFixed(2) + ' ft' : '';
+      document.getElementById('metersToFeet_print').textContent = metersToFeet ? (metersToFeet * 3.28084).toFixed(2) + ' ft' : '';
+
+      // Interior Damage Inputs
       const contentsReset = parseFloat(document.getElementById('contentsReset').value);
-      document.getElementById('contentsReset_print').textContent = isNaN(contentsReset) ? '-' : contentsReset;
-
       const floorLength = parseFloat(document.getElementById('floorLength').value);
       const floorWidth = parseFloat(document.getElementById('floorWidth').value);
-      const floorProtection = (!isNaN(floorLength) && !isNaN(floorWidth)) ? (floorLength * floorWidth).toFixed(2) : '-';
-      document.getElementById('floorProtectionFeet_print').textContent = floorProtection + ' sq ft';
-
       const maskLength = parseFloat(document.getElementById('maskLength').value);
       const maskWidth = parseFloat(document.getElementById('maskWidth').value);
       const maskHeight = parseFloat(document.getElementById('maskHeight').value);
+
+      document.getElementById('contentsReset_print').textContent = contentsReset;
+
+      // Calculations
+      const floorProtection = (!isNaN(floorLength) && !isNaN(floorWidth)) ? (floorLength * floorWidth).toFixed(2) : '-';
       const maskWalls = (!isNaN(maskLength) && !isNaN(maskWidth) && !isNaN(maskHeight))
-        ? (((maskLength + maskWidth) * 2 * maskHeight).toFixed(2)) : '-';
-      document.getElementById('maskWallsFeet_print').textContent = maskWalls + ' sq ft';
-
-      const drywallPatch = parseFloat(document.getElementById('drywallPatch').value) || 0;
-      const removePopcornLength = parseFloat(document.getElementById('removePopcornLength').value) || 0;
-      const removePopcornWidth = parseFloat(document.getElementById('removePopcornWidth').value) || 0;
-      const sealCeilingLength = parseFloat(document.getElementById('sealCeilingLength').value) || 0;
-      const sealCeilingWidth = parseFloat(document.getElementById('sealCeilingWidth').value) || 0;
-      const finalCleaningLength = parseFloat(document.getElementById('finalCleaningLength').value) || 0;
-      const finalCleaningWidth = parseFloat(document.getElementById('finalCleaningWidth').value) || 0;
-      const acousticCeilingLength = parseFloat(document.getElementById('acousticCeilingLength').value) || 0;
-      const acousticCeilingWidth = parseFloat(document.getElementById('acousticCeilingWidth').value) || 0;
-
-      // Calculate areas
-      const removePopcornArea = removePopcornLength * removePopcornWidth;
-      const sealCeilingArea = sealCeilingLength * sealCeilingWidth;
-      const finalCleaningArea = finalCleaningLength * finalCleaningWidth;
-      const acousticCeilingArea = acousticCeilingLength * acousticCeilingWidth;
-
-       ['convertToFeet', 'contentsReset', 'floorLength', 'floorWidth', 'maskLength', 'maskWidth', 'maskHeight', 'drywallPatch', 'removePopcornLength', 'removePopcornWidth', 'sealCeilingLength', 'sealCeilingWidth', 'finalCleaningLength', 'finalCleaningWidth', 'acousticCeilingLength', 'acousticCeilingWidth'].forEach(id => {
-        document.getElementById(id).addEventListener('input', calculateAll);
+        ? (((maskLength + maskWidth) * 2 * maskHeight).toFixed(2))
+        : '-';
+      // Event listeners for interior damage inputs
+      [
+        'inchesToFeet',
+        'metersToFeet',
+        'contentsReset',
+        'floorLength',
+        'floorWidth',
+        'maskLength',
+        'maskWidth',
+        'maskHeight'
+      ].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.addEventListener('input', calculateAll);
+        }
       });
-      document.getElementById('drywallPatch_print').textContent = drywallPatch;
-      document.getElementById('removePopcorn_print').textContent = removePopcornArea;
-      document.getElementById('sealCeiling_print').textContent = sealCeilingArea;
-      document.getElementById('finalCleaning_print').textContent = finalCleaningArea;
-      document.getElementById('acousticCeiling_print').textContent = acousticCeilingArea;
+
+      document.getElementById('floorProtectionFeet_print').textContent = floorProtection;  
+      document.getElementById('maskWallsFeet_print').textContent = maskWalls;  
+
+      // Fill table
       const interiorResultsBody = document.getElementById('interiorResultsBody');
-      interiorResultsBody.innerHTML = ''; // clear previous rows
-
-      if (convertedFeet !== '-') {
-        interiorResultsBody.innerHTML += `<tr><td>Converted to Feet</td><td>${convertedFeet} ft</td></tr>`;
-      }
-
-      if (!isNaN(contentsReset)) {
-        interiorResultsBody.innerHTML += `<tr><td>Contents - Move Out then Reset</td><td>${contentsReset}</td></tr>`;
-      }
-
-      if (floorProtection !== '-') {
-        interiorResultsBody.innerHTML += `<tr><td>Floor Protection</td><td>${floorProtection} sq ft</td></tr>`;
-      }
-
-      if (maskWalls !== '-') {
-        interiorResultsBody.innerHTML += `<tr><td>Mask Walls</td><td>${maskWalls} sq ft</td></tr>`;
-      }
-
-      if (drywallPatch > 0) {
-        interiorResultsBody.innerHTML += `<tr><td>Drywall patch / small repair, ready for paint</td><td>${drywallPatch.toFixed(2)} sq ft</td></tr>`;
-      }
-      if (removePopcornArea > 0) {
-        interiorResultsBody.innerHTML += `<tr><td>Remove acoustic ceiling (popcorn) texture</td><td>${removePopcornArea.toFixed(2)} sq ft</td></tr>`;
-      }
-
-      if (sealCeilingArea > 0) {
-        interiorResultsBody.innerHTML += `<tr><td>Seal the ceiling w/PVA primer - one coat</td><td>${sealCeilingArea.toFixed(2)} sq ft</td></tr>`;
-      }
-
-      if (finalCleaningArea > 0) {
-        interiorResultsBody.innerHTML += `<tr><td>Final cleaning - construction - residential</td><td>${finalCleaningArea.toFixed(2)} sq ft</td></tr>`;
-      }
-
-      if (acousticCeilingArea > 0) {
-        interiorResultsBody.innerHTML += `<tr><td>Acoustic ceiling (popcorn) texture</td><td>${acousticCeilingArea.toFixed(2)} sq ft</td></tr>`;
-      }
-
+      interiorResultsBody.innerHTML = `
+        <tr><td>Contents - Move Out then Reset</td><td>${isNaN(contentsReset) ? '-' : contentsReset}</td></tr>
+        <tr><td>Floor Protection - 10 mil</td><td>${floorProtection} sq ft</td></tr>
+        <tr><td>Mask the Walls - 4 mil</td><td>${maskWalls} sq ft</td></tr>
+      `;
 
       document.getElementById('interiorOutputSection').style.display = "block";
-      document.getElementById('unitSelect').addEventListener('change', calculateAll); 
-      hasCalculated = true;
+
+
     }
 
     function exportToPDF() {
-      if (!hasCalculated) {
-        alert("دخلي بيانات أول يا بياتنة 😤​");
-        return;
-      }
       const element = document.body;
 
       // Hide buttons temporarily
@@ -630,7 +535,6 @@
           // Show buttons again after export
           buttons.forEach(btn => btn.style.display = 'inline-block');
         });
-     
     }
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
