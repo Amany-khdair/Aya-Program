@@ -278,6 +278,43 @@
     <input type="number" id="acousticCeilingWidth" placeholder="Width (ft)">
   </div>
 
+    <!-- SF Walls -->
+  <div class="item-row">
+    <label for="sfWalls">SF Walls:<span class="print-value" id="sfWalls_print"></span></label>
+    <input type="number" id="sfWallsLength" placeholder="Length (ft)">
+    <input type="number" id="sfWallsWidth" placeholder="Width (ft)">
+    <input type="number" id="sfWallsHeight" placeholder="Height (ft)">
+  </div>
+
+  <!-- SF Ceiling -->
+  <div class="item-row">
+    <label for="sfCeiling">SF Ceiling:<span class="print-value" id="sfCeiling_print"></span></label>
+    <input type="number" id="sfCeilingLength" placeholder="Length (ft)">
+    <input type="number" id="sfCeilingWidth" placeholder="Width (ft)">
+  </div>
+
+    <!-- SF Floor -->
+  <div class="item-row">
+    <label for="sfFloor">SF Floor:<span class="print-value" id="sfFloor_print"></span></label>
+    <input type="number" id="sfFloorLength" placeholder="Length (ft)">
+    <input type="number" id="sfFloorWidth" placeholder="Width (ft)">
+  </div>
+
+  <!-- LF Ceil Perimeter -->
+  <div class="item-row">
+    <label for="lfCeilPerimeter">LF Ceil Perimeter:<span class="print-value" id="lfCeilPerimeter_print"></span></label>
+    <input type="number" id="ceilLength" placeholder="Length (ft)">
+    <input type="number" id="ceilWidth" placeholder="Width (ft)">
+  </div>
+
+  <!-- LF Floor Perimeter -->
+  <div class="item-row">
+    <label for="lfFloorPerimeter">LF Floor Perimeter:<span class="print-value" id="lfFloorPerimeter_print"></span></label>
+    <input type="number" id="lffloorLength" placeholder="Length (ft)">
+    <input type="number" id="lffloorWidth" placeholder="Width (ft)">
+  </div>
+
+
 </div>
 
 
@@ -515,6 +552,8 @@
         resultsTableBody.innerHTML += `<tr><td>Box of Nails Cap</td><td>${qty} Box</td><td>${extra}</td><td>${xact} SQ</td></tr>`;
       }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       const convertValue = parseFloat(document.getElementById('convertToFeet').value);
       const convertUnit = document.getElementById('unitSelect').value;
       const convertedFeet = !isNaN(convertValue) ? convertToFeet(convertValue, convertUnit) : '-';
@@ -551,6 +590,39 @@
       const finalCleaningArea = finalCleaningLength * finalCleaningWidth;
       const acousticCeilingArea = acousticCeilingLength * acousticCeilingWidth;
 
+      // SF Walls calculation: ((length + width) * 2) * height
+      const sfWallsLength = parseFloat(document.getElementById('sfWallsLength').value) || 0;
+      const sfWallsWidth = parseFloat(document.getElementById('sfWallsWidth').value) || 0;
+      const sfWallsHeight = parseFloat(document.getElementById('sfWallsHeight').value) || 0;
+      const sfWallsArea = (((sfWallsLength + sfWallsWidth) * 2) * sfWallsHeight);
+
+      // SF Ceiling calculation: length * width
+      const sfCeilingLength = parseFloat(document.getElementById('sfCeilingLength').value) || 0;
+      const sfCeilingWidth = parseFloat(document.getElementById('sfCeilingWidth').value) || 0;
+      const sfCeilingArea = (sfCeilingLength * sfCeilingWidth);
+
+      // Final Combined: SF Walls * SF Ceiling
+      const sfWallsCeilingArea = sfWallsArea + sfCeilingArea;
+
+      // SF Floor = length * width
+      const sfFloorLength = parseFloat(document.getElementById('sfFloorLength').value) || 0;
+      const sfFloorWidth = parseFloat(document.getElementById('sfFloorWidth').value) || 0;
+      const sfFloorArea = (sfFloorLength * sfFloorWidth).toFixed(2);
+
+      // SY Flooring = SF Floor / 9
+      const syFlooring = (sfFloorArea / 9).toFixed(2);
+
+      // LF Ceil Perimeter = (length + width) * 2
+      const ceilLength = parseFloat(document.getElementById('ceilLength').value) || 0;
+      const ceilWidth = parseFloat(document.getElementById('ceilWidth').value) || 0;
+      const lfCeilPerimeter = ((ceilLength + ceilWidth) * 2).toFixed(2);
+
+      // LF Floor Perimeter = (length + width) * 2
+      const lffloorLength = parseFloat(document.getElementById('lffloorLength').value) || 0;
+      const lffloorWidth = parseFloat(document.getElementById('lffloorWidth').value) || 0;
+      const lfFloorPerimeter = ((lffloorLength + lffloorWidth) * 2).toFixed(2);
+
+
        ['convertToFeet', 'contentsReset', 'floorLength', 'floorWidth', 'maskLength', 'maskWidth', 'maskHeight', 'drywallPatch', 'removePopcornLength', 'removePopcornWidth', 'sealCeilingLength', 'sealCeilingWidth', 'finalCleaningLength', 'finalCleaningWidth', 'acousticCeilingLength', 'acousticCeilingWidth'].forEach(id => {
         document.getElementById(id).addEventListener('input', calculateAll);
       });
@@ -559,6 +631,15 @@
       document.getElementById('sealCeiling_print').textContent = sealCeilingArea;
       document.getElementById('finalCleaning_print').textContent = finalCleaningArea;
       document.getElementById('acousticCeiling_print').textContent = acousticCeilingArea;
+      document.getElementById('sfWalls_print').textContent = sfWallsArea;
+      document.getElementById('sfCeiling_print').textContent = sfCeilingArea;
+      document.getElementById('sfFloor_print').textContent = sfFloorArea;
+      document.getElementById('lfCeilPerimeter_print').textContent = lfCeilPerimeter;
+      document.getElementById('lfFloorPerimeter_print').textContent = lfFloorPerimeter;
+
+
+
+
       const interiorResultsBody = document.getElementById('interiorResultsBody');
       interiorResultsBody.innerHTML = ''; // clear previous rows
 
@@ -595,6 +676,37 @@
 
       if (acousticCeilingArea > 0) {
         interiorResultsBody.innerHTML += `<tr><td>Acoustic ceiling (popcorn) texture</td><td>${acousticCeilingArea.toFixed(2)} sq ft</td></tr>`;
+      }
+
+      // Add SF calculations to results table if values entered
+      if (sfWallsArea > 0) {
+        interiorResultsBody.innerHTML += `<tr><td>SF Walls</td><td>${sfWallsArea} sq ft</td></tr>`;
+      }
+      if (sfCeilingArea > 0) {
+        interiorResultsBody.innerHTML += `<tr><td>SF Ceiling</td><td>${sfCeilingArea} sq ft</td></tr>`;
+      }
+      if (sfWallsArea > 0 && sfCeilingArea > 0) {
+        interiorResultsBody.innerHTML += `<tr><td>SF Walls & Ceiling</td><td>${sfWallsCeilingArea} sq ft</td></tr>`;
+      }
+
+      // SF Floor
+      if (sfFloorArea > 0) {
+        interiorResultsBody.innerHTML += `<tr><td>SF Floor</td><td>${sfFloorArea} sq ft</td></tr>`;
+      }
+
+      // SY Flooring
+      if (syFlooring > 0) {
+        interiorResultsBody.innerHTML += `<tr><td>SY Flooring</td><td>${syFlooring} sq ft</td></tr>`;
+      }
+
+      // LF Ceil Perimeter
+      if (lfCeilPerimeter > 0) {
+        interiorResultsBody.innerHTML += `<tr><td>LF Ceil Perimeter</td><td>${lfCeilPerimeter} ft</td></tr>`;
+      }
+
+      // LF Floor Perimeter
+      if (lfFloorPerimeter > 0) {
+        interiorResultsBody.innerHTML += `<tr><td>LF Floor Perimeter</td><td>${lfFloorPerimeter} ft</td></tr>`;
       }
 
 
