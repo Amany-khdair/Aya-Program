@@ -158,19 +158,19 @@
     <input type="number" id="pipeJack" placeholder="Enter CC Pipe Jack" />
   </div>
   <div class="item-row">
-    <label for="addditionalCharge">Additional Charge for high roof:<span class="print-value" id="addditionalCharge_print"></span></label>
+    <label for="addditionalCharge">Additional Charge for high roof (2 stories or greater):<span class="print-value" id="addditionalCharge_print"></span></label>
     <input type="number" id="addditionalCharge" placeholder="Enter Additional Charge for high roof (2 stories or greater)" />
   </div>
   <div class="item-row">
-    <label for="removeAddditionalCharge">Remove Additional Charge for high roof:<span class="print-value" id="removeAddditionalCharge_print"></span></label>
+    <label for="removeAddditionalCharge">Remove Additional Charge for high roof (2 stories or greater):<span class="print-value" id="removeAddditionalCharge_print"></span></label>
     <input type="number" id="removeAddditionalCharge" placeholder="Enter Additional Charge for high roof (2 stories or greater)" />
   </div>
   <div class="item-row">
-    <label for="addditionalChargeStep">Additional Charge for step roof:<span class="print-value" id="addditionalChargeStep_print"></span></label>
+    <label for="addditionalChargeStep">Additional Charge for steep roof:<span class="print-value" id="addditionalChargeStep_print"></span></label>
     <input type="number" id="addditionalChargeStep" placeholder="Enter Additional Charge for step roof - 7/12 9/12 slope" />
   </div>  
   <div class="item-row">
-    <label for="removeAddditionalChargeStep">Remove Additional Charge for step roof:<span class="print-value" id="removeAddditionalChargeStep_print"></span></label>
+    <label for="removeAddditionalChargeStep">Remove Additional Charge for steep roof:<span class="print-value" id="removeAddditionalChargeStep_print"></span></label>
     <input type="number" id="removeAddditionalChargeStep" placeholder="Enter Additional Charge for step roof - 7/12 9/12 slope" />
   </div>
   <div class="item-row">
@@ -450,8 +450,8 @@
         CC pipe Jack: ${pipeJack}<br>
         Additional Charge for high roof (2 stories or greater): ${addditionalChargeValue}<br>
         Remove Additional Charge for high roof (2 stories or greater): ${removeAddditionalChargeValue}<br>
-        Additional Charge for step roof: ${addditionalChargeStepValue}<br>
-        Remove Additional Charge for step roof: ${removeAddditionalChargeStepValue}<br>  
+        Additional Charge for steep roof: ${addditionalChargeStepValue}<br>
+        Remove Additional Charge for steep roof: ${removeAddditionalChargeStepValue}<br>  
         Gutter Down Spout for First Floor: ${Math.floor(dawnspoutValue)}<br> 
         Gutter for First Floor: ${Math.floor(dawnspoutTotalValue)}<br> 
         Gutter Down Spout for Second Floor: ${Math.floor(dawnspoutValueSec)}<br>  
@@ -511,7 +511,7 @@
         const qty = Math.ceil(raw);
         const extra = +(qty - raw).toFixed(5);
         const xact = qty * 50;
-        resultsTableBody.innerHTML += `<tr><td>Ice & Water Underlayment</td><td>${qty} Roll</td><td>${extra}</td><td>${xact} SQ</td></tr>`;
+        resultsTableBody.innerHTML += `<tr><td>Ice & Water Underlayment</td><td>${qty} Roll</td><td>${extra}</td><td>${xact} LF</td></tr>`;
       }
 
       if (!isNaN(synthicUnder)) {
